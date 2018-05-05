@@ -172,7 +172,7 @@ function createCollectable(x, y) {
   collectable.addToGroup(collectables);
   collectable.scale = 0.5;
   collectable.addImage(collectableImage);
-  //collectable.debug = true;
+  collectable.debug = true;
 }
 
 // Applies gravity to player and monsters. Also checks if either of them
@@ -234,7 +234,10 @@ function checkIdle() {
 // Check if the player is falling. If she is not grounded and her y velocity is
 // greater than 0, then set her animation to "fall".
 function checkFalling() {
+if (!playerGrounded && player.velocity.y > 0){
+  player.changeAnimation("fall");
 
+}
 }
 
 // Check if the player is jumping. First, if her y velocity is less than 0, set
@@ -242,6 +245,15 @@ function checkFalling() {
 // key, which should allow her to jump higher so long as currentJumpTime is greater
 // than 0.
 function checkJumping() {
+if(player.velocity.y < 0){
+  player.changeAnimation("jump");
+}
+if(keyIsDown(UP_ARROW) && currentJumpTime>03){
+  player.velocity.y=currentJumpForce;
+  //currentJumpTime -=deltaMillis-millis;
+}
+
+
 
 }
 
@@ -270,7 +282,12 @@ else if (!keyIsDown(LEFT_ARROW)&& keyIsDown(RIGHT_ARROW)){
 // this should initiate the jump sequence, which can be extended by holding down
 // the up arrow key (see checkJumping() above).
 function keyPressed() {
+if (keyCode === UP_ARROW && playerGrounded){
+  playerGrounded=false;
+  player.velocity.y=currentJumpForce;
+  millis=new Date();
 
+  }
 }
 
 // Check if the player has released the up arrow key. If the player's y velocity
